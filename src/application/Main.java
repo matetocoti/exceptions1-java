@@ -74,17 +74,20 @@ public class Main {
             checkOut = sdf1.parse(input.next());
 
 
-            Date now = new Date();
-            if(checkIn.before(now) || checkOut.before(now)){
-                System.out.println("Error in reservation: Reservation dates for update must be future dates");
-            }
-            else if(!checkOut.after(checkIn)){
-                System.out.println("Error in reservation: Check-out date must be after check-in date");
-            }
-            else{
-                //Chamando o método para atualizar as datas
-                reservation.updateDates(checkIn ,checkOut);
 
+
+            // Chamando o método para atualizar as datas
+            // Variavel de tipo String Pois agora o retorno do método é string
+            String error = reservation.updateDates(checkIn ,checkOut);
+
+            // Se error for diferente de null então...
+            if(error != null) {
+                System.out.println("Error in reservation: " + error);
+            }
+            else
+            {
+                // Se não há erros...
+                // Exibindo dados
                 System.out.println("Reservation: " + reservation);
             }
 

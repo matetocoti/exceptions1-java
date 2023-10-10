@@ -62,23 +62,37 @@ public class Reservation {
 
     //region MÉTODOS
 
-    //Método pegar a duração
+    // Método pegar a duração
 
-    //Tipo long inteiro mais longo
+    // Tipo long inteiro mais longo
     public long duration(){
-        //Pegando as datas de saida e entrada em milisegundos
-        //E calculando a diferença em diff
+        // Pegando as datas de saida e entrada em milisegundos
+        // E calculando a diferença em diff
         long diff = checkOut.getTime() - checkIn.getTime();
-        //Usando Classe TimeUnit para converter diff de milisegundos para horas
-        //Retornando a diferença em dias
+        // Usando Classe TimeUnit para converter diff de milisegundos para horas
+        // Retornando a diferença em dias
         return TimeUnit.DAYS.convert(diff ,TimeUnit.MILLISECONDS);
     }
 
-    //Método para atualizar as datas
-    public void updateDates(Date checkIn ,Date checkOut){
-        //Atributo de classe recebendo argumento de método
+    // Método para atualizar as datas
+    public String updateDates(Date checkIn ,Date checkOut){
+
+        //Checando erros
+        Date now = new Date();
+        if(checkIn.before(now) || checkOut.before(now)){
+            return "Reservation dates for update must be future dates";
+        }
+        if(!checkOut.after(checkIn)){
+            return "Check-out date must be after check-in date";
+        }
+
+
+        // Atributo de classe recebendo argumento de método
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        // Indicando que não há erros
+        return null;
+
     }
 
 
