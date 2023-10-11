@@ -1,27 +1,22 @@
 package application;
 
-//regions IMPORTS
+//region IMPORTS
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
 
 
 import model.entities.Reservation;
+import model.exceptions.DomainException;
 
 //endregion
 
-//Solução muito ruim
 public class Main {
-                            // Falando que o método main
-                            // pode lançar|Não tratar esse tipo de Exceção
-                            // Exceções do tipo Parse
-
-                            // OBS:ou voce trata a exceção ou voce
-                            // propaga com a palavra throws + nome da exceção
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args){
 
         //region INSTANCIANDO
 
@@ -33,27 +28,22 @@ public class Main {
 
         //endregion
 
-
         //region ENTRADA E SAIDA DE DADOS
 
-        System.out.print("Room number: ");
-        int roomNumber = input.nextInt();
-        input.nextLine();
+        try {
+            System.out.print("Room number: ");
+            int roomNumber = input.nextInt();
+            input.nextLine();
 
-        System.out.print("Check-in data(dd/MM/yyyy):");
-        Date checkIn = sdf1.parse(input.next());
+            System.out.print("Check-in data(dd/MM/yyyy):");
+            Date checkIn = sdf1.parse(input.next());
 
-        System.out.print("Check-out data(dd/MM/yyyy):");
-        Date checkOut = sdf1.parse(input.next());
+            System.out.print("Check-out data(dd/MM/yyyy):");
+            Date checkOut = sdf1.parse(input.next());
 
-        // Se data de saída não é depois de data de entrada então...
-        if(!checkOut.after(checkIn)) {
-            System.out.println("Error in reservation: Check-out date must be after check-in date");
-        }
-        else// Senão
-        {
+
             //Instanciando o meu obj
-            Reservation reservation = new Reservation(roomNumber ,checkIn ,checkOut);
+            Reservation reservation = new Reservation(roomNumber, checkIn, checkOut);
 
             // Mostrando os dados da reserva
             // OBS: eu só coloco assim direto o obj pois eu fiz um @Override no toString()
@@ -61,8 +51,7 @@ public class Main {
             System.out.println("Reservation: " + reservation);
 
 
-
-            //region ATUALIZANDO DADOS
+            //Atualizando dados
 
             System.out.println();
 
@@ -73,30 +62,31 @@ public class Main {
             System.out.print("Check-out data(dd/MM/yyyy):");
             checkOut = sdf1.parse(input.next());
 
-
-
-
             // Chamando o método para atualizar as datas
             // Variavel de tipo String Pois agora o retorno do método é string
-            String error = reservation.updateDates(checkIn ,checkOut);
+            reservation.updateDates(checkIn, checkOut);
 
-            // Se error for diferente de null então...
-            if(error != null) {
-                System.out.println("Error in reservation: " + error);
-            }
-            else
-            {
-                // Se não há erros...
-                // Exibindo dados
-                System.out.println("Reservation: " + reservation);
-            }
-
-            //endregion
+            // Se não há erros...
+            // Exibindo dados
+            System.out.println("Reservation: " + reservation);
+        }
+        // lançada quando ocorre um erro durante
+        // a análise (conversão) de uma string em um tipo de dado específico,
+        // como data ou número.
+        catch (ParseException e){
+            System.out.println("Invalid date format");
+        }
+        // Lançada quando um método recebe um argumento inválido.
+        catch (DomainException e){           // Messagem de quando estanciei a exceção
+            System.out.println("Error in reservation: " + e.getMessage());
+        }
+        //Qualquer exceção inesperada
+        catch(RuntimeException e){
+            System.out.println("Unexpected Error");
         }
 
 
         //endregion
-
 
         //region FINALIZANDO
         input.close();
